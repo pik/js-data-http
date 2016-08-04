@@ -28,5 +28,6 @@
     "webpack.config.js"
   ],
   "dependencies": {
+    "js-data": "git+https://git@github.com/pik/js-data#master"
   }
 }
