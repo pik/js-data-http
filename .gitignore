@@ -1,5 +1,5 @@
-dist/*.js
-dist/*.map
+# dist/*.js
+# dist/*.map
 bower_components/
 
 .idea/
