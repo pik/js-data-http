@@ -1064,7 +1064,7 @@ Adapter.extend({
  *
  * // GET /reports/schools/:school_id/teachers
  * addAction('getTeacherReports', {
- *   basePath: 'reports/schools',
+ *   endpoint: 'reports/schools',
  *   pathname: 'teachers',
  *   method: 'GET'
  * })(store.getMapper('school'))
@@ -1098,22 +1098,22 @@ export function addAction (name, opts) {
     opts.response = opts.response || function (response) { return response }
     opts.responseError = opts.responseError || function (err) { return utils.reject(err) }
     mapper[name] = function (id, _opts) {
+      _opts = _opts || {}
       if (utils.isObject(id)) {
         _opts = id
       }
-      _opts = _opts || {}
-      let adapter = this.getAdapter(opts.adapter || this.defaultAdapter || 'http')
-      let config = {}
-      utils.fillIn(config, opts)
-      if (!_opts.hasOwnProperty('endpoint') && config.endpoint) {
-        _opts.endpoint = config.endpoint
-      }
+      utils.fillIn(_opts, opts)
+      let adapter = this.getAdapter(_opts.adapter || this.defaultAdapter || 'http')
+      const config = {}
+      config.mapper = this.name
+      utils.deepMixIn(config, _opts)
+      config.method = config.method || 'GET'
       if (typeof _opts.getEndpoint === 'function') {
         config.url = _opts.getEndpoint(this, _opts)
       } else {
         let args = [
           _opts.basePath || this.basePath || adapter.basePath,
-          adapter.getEndpoint(this, utils.isSorN(id) ? id : null, _opts)
+          adapter.getEndpoint(this, id, _opts)
         ]
         if (utils.isSorN(id)) {
           args.push(id)
@@ -1121,11 +1121,8 @@ export function addAction (name, opts) {
         args.push(opts.pathname || name)
         config.url = makePath.apply(null, args)
       }
-      config.method = config.method || 'GET'
-      config.mapper = this.name
-      utils.deepMixIn(config, _opts)
       return utils.resolve(config)
-        .then(_opts.request || opts.request)
+        .then(_opts.request)
         .then((config) => adapter.HTTP(config))
         .then((data) => {
           if (data && data.config) {
@@ -1133,7 +1130,7 @@ export function addAction (name, opts) {
           }
           return data
         })
-        .then(_opts.response || opts.response, _opts.responseError || opts.responseError)
+        .then(_opts.response, _opts.responseError)
     }
     return mapper
   }
