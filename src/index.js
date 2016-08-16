@@ -1,4 +1,4 @@
-/* global fetch:true Headers:true Request:true */
+/* global fetch:true Headers:true */
 
 import {utils} from 'js-data'
 import axios from '../node_modules/axios/dist/axios'
@@ -53,7 +53,7 @@ function buildUrl (url, params) {
     }
 
     val.forEach(function (v) {
-      if (window.toString.call(v) === '[object Date]') {
+      if (toString.call(v) === '[object Date]') {
         v = v.toISOString()
       } else if (utils.isObject(v)) {
         v = utils.toJson(v)
@@ -558,20 +558,19 @@ Adapter.extend({
    * @param {Object} config.headers Headers for the request.
    * @param {Object} config.params Querystring for the request.
    * @param {string} config.url Url for the request.
-   * @param {Object} [opts] Configuration options.
    */
-  fetch (config, opts) {
+  fetch (config) {
     const requestConfig = {
       method: config.method,
       // turn the plain headers object into the Fetch Headers object
-      headers: new Headers(config.headers)
+      headers: new Headers(config.headers || {})
     }
 
     if (config.data) {
       requestConfig.body = utils.toJson(config.data)
     }
 
-    return fetch(new Request(buildUrl(config.url, config.params), requestConfig))
+    return fetch(buildUrl(config.url, config.params), requestConfig)
       .then((response) => {
         response.config = {
           method: config.method,

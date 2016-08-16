@@ -1,6 +1,8 @@
 /* global JSData:true, JSDataHttp:true, sinon:true, chai:true */
+
 before(function () {
   var Test = this
+  Test.TEST_FETCH = false
   Test.fail = function (msg) {
     if (msg instanceof Error) {
       console.log(msg.stack)
