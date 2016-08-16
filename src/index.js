@@ -969,7 +969,7 @@ Adapter.extend({
   sum (mapper, field, query, opts) {
     query || (query = {})
     opts || (opts = {})
-    if (!utils.utils.isString(field)) {
+    if (!utils.isString(field)) {
       throw new Error('field must be a string!')
     }
     opts.params = this.getParams(opts)
