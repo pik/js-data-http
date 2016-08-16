@@ -17,6 +17,12 @@ before(function () {
   Test.addAction = JSDataHttp.addAction
   Test.addActions = JSDataHttp.addActions
   Test.HttpAdapter = JSDataHttp.HttpAdapter
+
+  Test.store = new JSData.DataStore()
+  Test.adapter = new Test.HttpAdapter()
+
+  Test.store.registerAdapter('http', Test.adapter, { default: true })
+
   Test.User = new JSData.Mapper({
     name: 'user'
   })
@@ -26,14 +32,13 @@ before(function () {
     basePath: 'api'
   })
 
+  Test.User.registerAdapter('http', Test.adapter, { default: true })
+  Test.Post.registerAdapter('http', Test.adapter, { default: true })
   console.log('Testing against js-data ' + JSData.version.full)
 })
 
 beforeEach(function () {
   var Test = this
-  Test.adapter = new Test.HttpAdapter()
-  Test.User.registerAdapter('http', Test.adapter, { default: true })
-  Test.Post.registerAdapter('http', Test.adapter, { default: true })
 
   Test.p1 = { author: 'John', age: 30, id: 5 }
   Test.p2 = { author: 'Sally', age: 31, id: 6 }

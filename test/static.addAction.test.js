@@ -1,10 +1,7 @@
 describe('static addAction', function () {
   it('should addAction', function (done) {
     var Test = this
-    var adapter = Test.adapter
-    var store = new Test.JSData.DataStore()
-    store.registerAdapter('http', adapter, { default: true })
-    var SchoolMapper = store.defineMapper('school', {})
+    var SchoolMapper = Test.store.defineMapper('school', {})
 
     // GET async/reports/schools/:school_id/teachers
     Test.addAction('getTeacherReportsAsync', {
