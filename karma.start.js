@@ -15,6 +15,7 @@ before(function () {
   Test.sinon = sinon
   Test.JSData = JSData
   Test.addAction = JSDataHttp.addAction
+  Test.addActions = JSDataHttp.addActions
   Test.HttpAdapter = JSDataHttp.HttpAdapter
   Test.User = new JSData.Mapper({
     name: 'user'
